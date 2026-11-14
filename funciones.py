@@ -93,7 +93,11 @@ def crear_capa(database, tabla, nombre_capa, mostrar=False):
 def obtener_datos(database):
     engine = create_engine(f"mysql+pymysql://{database['user']}:{database['password']}@{database['host']}/{database['db_name']}")
 
-    return pd.read_sql_query(f'SELECT * FROM {database["table_name"]}', engine)
+    query = f'SELECT * FROM {database["table_name"]}'
+    if database["table_name"] == "puntos":
+        query += " WHERE BUSLIC_TRADE_NAME NOT LIKE 'STARBUCKS%%'"
+
+    return pd.read_sql_query(query, engine)
 
 
 def crear_tabla(data, database):
